@@ -1,0 +1,136 @@
+local TweenService = game:GetService("TweenService")
+
+local Players = game:GetService("Players")  
+local ScreenGui = Instance.new("ScreenGui")  
+ScreenGui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")  
+ScreenGui.ResetOnSpawn = false
+
+-- EXECUTOR UI (Smooth and Polished)  
+local Frame = Instance.new("Frame")  
+Frame.Size = UDim2.new(0, 300, 0, 150)  
+Frame.Position = UDim2.new(0.5, -150, 0.5, -75)  
+Frame.BackgroundColor3 = Color3.fromRGB(128, 128, 128) -- Grey Background  
+Frame.Draggable = true  
+Frame.Parent = ScreenGui
+
+local corner = Instance.new("UICorner")  
+corner.CornerRadius = UDim.new(0, 15)  
+corner.Parent = Frame
+
+local HeaderText = Instance.new("TextLabel")  
+HeaderText.Size = UDim2.new(1, -20, 0, 40)  
+HeaderText.Position = UDim2.new(0, 10, 0, 10)  
+HeaderText.BackgroundColor3 = Color3.fromRGB(100, 100, 100) -- Darker grey header  
+HeaderText.BackgroundTransparency = 0.5  
+HeaderText.Text = "steal a brainrot unlock all"  
+HeaderText.TextColor3 = Color3.fromRGB(255, 255, 255)  
+HeaderText.Font = Enum.Font.GothamBold  
+HeaderText.TextSize = 16  
+HeaderText.Parent = Frame
+
+local headerCorner = Instance.new("UICorner")  
+headerCorner.CornerRadius = UDim.new(0, 10)  
+headerCorner.Parent = HeaderText
+
+-- RED EXECUTE BUTTON  
+local RedButton = Instance.new("TextButton")  
+RedButton.Size = UDim2.new(0.9, -20, 0, 50)  
+RedButton.Position = UDim2.new(0.05, 10)  
+RedButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)  
+RedButton.Text = "Execute"  
+RedButton.TextColor3 = Color3.fromRGB(255, 255, 255)  
+RedButton.Font = Enum.Font.GothamBold  
+RedButton.TextSize = 20  
+RedButton.Parent = Frame
+
+local btnCorner = Instance.new("UICorner")  
+btnCorner.CornerRadius = UDim.new(0, 10)  
+btnCorner.Parent = RedButton
+
+-- MINIMIZE BUTTON (Top Right)  
+local MinimizeButton = Instance.new("TextButton")  
+MinimizeButton.Size = UDim2.new(0, 30, 0, 30)  
+MinimizeButton.Position = UDim2.new(1, -40, 0, 10)  
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)  
+MinimizeButton.Text = "-"  
+MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)  
+MinimizeButton.Font = Enum.Font.GothamBold  
+MinimizeButton.TextSize = 24  
+MinimizeButton.Parent = Frame
+
+local minCorner = Instance.new("UICorner")  
+minCorner.CornerRadius = UDim.new(0, 10)  
+minCorner.Parent = MinimizeButton
+
+-- MINIMIZE LOGIC  
+local isExpanded = true  
+MinimizeButton.MouseButton1Click:Connect(function()  
+if isExpanded then  
+-- Collapse (Minimize)  
+TweenService:Create(Frame, TweenInfo.new(0.3), {Size = UDim2.new(0, 40, 0, 40), Position = UDim2.new(1, -55, 0, 10)}):Play()  
+HeaderText.Visible = false  
+RedButton.Visible = false  
+MinimizeButton.Visible = false  
+isExpanded = false  
+else  
+-- Expand (Restore)  
+TweenService:Create(Frame, TweenInfo.new(0.3), {Size = UDim2.new(0, 300, 0, 150), Position = UDim2.new(0.5, -150, 0.5, -75)}):Play()  
+HeaderText.Visible = true  
+RedButton.Visible = true  
+MinimizeButton.Visible = true  
+MinimizeButton.Text = "-"  
+isExpanded = true  
+end  
+end)
+
+-- EXECUTE BUTTON LOGIC  
+RedButton.MouseButton1Click:Connect(function()  
+-- Close the menu smoothly  
+TweenService:Create(Frame, TweenInfo.new(0.2), {Size = UDim2.new(0, 0, 0, 0), Position = UDim2.new(0.5, 0, 0.5, 0)}):Play()
+
+-- Scripted Animation for Failure Message  
+task.wait(0.5)
+
+local PopupGui = Instance.new("ScreenGui")  
+PopupGui.Parent = Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local PopupFrame = Instance.new("Frame")  
+PopupFrame.Size = UDim2.new(0, 250, 0, 70)  
+PopupFrame.Position = UDim2.new(1, -260, 0, 20)  
+PopupFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)  
+PopupFrame.Parent = PopupGui
+
+local popupCorner = Instance.new("UICorner")  
+popupCorner.CornerRadius = UDim.new(0, 10)  
+popupCorner.Parent = PopupFrame
+
+local PopupLabel = Instance.new("TextLabel")  
+PopupLabel.Size = UDim2.new(1, -20, 1, -20)  
+PopupLabel.Position = UDim2.new(0, 10, 0, 10)  
+PopupLabel.Text = "script failed"  
+PopupLabel.TextColor3 = Color3.fromRGB(255, 0, 0)  
+PopupLabel.Font = Enum.Font.GothamBold  
+PopupLabel.TextSize = 18  
+PopupLabel.Parent = PopupFrame
+
+-- SCRIPTED ANIMATION  
+local targetY = PopupFrame.Position.Y.Scale  
+local currentY = 1.5
+
+PopupFrame.Position = UDim2.new(1, -260, 1.5, 0)
+
+-- Animate In (Slide Up)  
+local tweenAnimation = TweenService:Create(PopupFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})  
+tweenAnimation:Play()
+
+-- Fade Out after 1 second  
+task.wait(1)  
+local fadeOut = TweenService:Create(PopupLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quad), {Transparency = 1})  
+fadeOut:Play()
+
+-- Destroy after fade out  
+fadeOut.Completed:Connect(function()  
+PopupFrame.Visible = false  
+PopupGui:Destroy()  
+end)  
+end)  
